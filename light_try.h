@@ -23,9 +23,9 @@ void ___lt_try_end();
 bool ___lt_catch();
 void ___lt_throw();
 
-#define ltry for (___lt_try_begin(setjmp(___lt_push())); ___lt_try_condition(); ___lt_try_end())
-#define lcatch if (___lt_catch())
-#define lthrow ___lt_throw()
+#define lt_try for (___lt_try_begin(setjmp(___lt_push())); ___lt_try_condition(); ___lt_try_end())
+#define lt_catch if (___lt_catch())
+#define lt_throw ___lt_throw()
 
 #ifdef __cplusplus
 }
