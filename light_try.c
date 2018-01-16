@@ -7,6 +7,7 @@
  */
 
 #include <stdlib.h>
+#include <pthread.h>
 #include "light_try.h"
 
 typedef struct ___LtEnvNode ___LtEnvNode;
@@ -66,7 +67,7 @@ void ___lt_throw() {
 	if (env_stack) {
 		longjmp(env_stack->env, 1);
 	} else {
-		exit(1);
+		pthread_exit(NULL);
 	}
 }
 
