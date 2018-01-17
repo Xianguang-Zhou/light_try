@@ -7,7 +7,13 @@
  */
 
 #include <stdlib.h>
+
+#ifdef _MSC_VER
+#include <windows.h>
+#else
 #include <pthread.h>
+#endif
+
 #include "light_try.h"
 
 typedef struct ___LtEnvNode ___LtEnvNode;
@@ -16,11 +22,15 @@ struct ___LtEnvNode {
 	___LtEnvNode *next;
 };
 
+#ifdef _MSC_VER
+#define __thread __declspec(thread)
+#endif
+
 static __thread ___LtEnvNode *env_stack;
 static __thread bool is_throw;
 static __thread bool try_condtion;
 
-struct __jmp_buf_tag *___lt_push() {
+jmp_buf *___lt_push() {
 	if (env_stack) {
 		___LtEnvNode *new_env_node = malloc(sizeof(___LtEnvNode));
 		new_env_node->next = env_stack;
@@ -29,7 +39,7 @@ struct __jmp_buf_tag *___lt_push() {
 		env_stack = malloc(sizeof(___LtEnvNode));
 		env_stack->next = NULL;
 	}
-	return env_stack->env;
+	return &(env_stack->env);
 }
 
 static void ___lt_pop() {
@@ -67,7 +77,11 @@ void ___lt_throw() {
 	if (env_stack) {
 		longjmp(env_stack->env, 1);
 	} else {
+#ifdef _MSC_VER
+		ExitThread(0);
+#else
 		pthread_exit(NULL);
+#endif
 	}
 }
 

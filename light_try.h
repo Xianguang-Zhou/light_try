@@ -16,14 +16,14 @@ extern "C" {
 #include <stdbool.h>
 #include <setjmp.h>
 
-struct __jmp_buf_tag *___lt_push();
+jmp_buf *___lt_push();
 void ___lt_try_begin(int val);
 bool ___lt_try_condition();
 void ___lt_try_end();
 bool ___lt_catch();
 void ___lt_throw();
 
-#define lt_try for (___lt_try_begin(setjmp(___lt_push())); ___lt_try_condition(); ___lt_try_end())
+#define lt_try for (___lt_try_begin(setjmp(*___lt_push())); ___lt_try_condition(); ___lt_try_end())
 #define lt_catch if (___lt_catch())
 #define lt_throw ___lt_throw()
 
